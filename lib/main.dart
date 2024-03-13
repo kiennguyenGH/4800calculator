@@ -1,5 +1,6 @@
 import 'package:calculator_4800/button.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,8 +59,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   var textField = '';
-  var textCalc = '';
-
+  bool complete = false;
   final List<String> buttonList =
       [
         'C', 'DEL', '', '/',
@@ -111,8 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       text: buttonList[index],
                       color: Colors.black26,
                       fontColor: Colors.white,
-                      height: 50,
-                      width: 50,
                     );
                   }
                   if (index == 1) {
@@ -126,32 +124,51 @@ class _MyHomePageState extends State<MyHomePage> {
                       text: buttonList[index],
                       color: Colors.black26,
                       fontColor: Colors.white,
-                      height: 50,
-                      width: 50,
                     );
                   }
-                  if (index == 2 || index == 18) {
+                  else if (index == 2 || index == 18) {
                     return Button(
                       text: buttonList[index],
                       color: Colors.transparent,
                       fontColor: Colors.white,
-                      height: 50,
-                      width: 50,
+                    );
+                  }
+                  else if (index == buttonList.length - 1) {
+                    return Button(
+                      onTapped: ()
+                      {
+                        setState(() {
+                          evaluate();
+                        });
+                      },
+                      text: buttonList[index],
+                      color: Colors.black26,
+                      fontColor: Colors.white,
                     );
                   }
                   else {
                     return Button(
                       onTapped: ()
                       {
-                        setState(() {
-                          textField += buttonList[index];
-                        });
+                        if (complete)
+                        {
+                          setState(() {
+                            complete = false;
+                            textField = '';
+                            textField += buttonList[index];
+                          });
+                        }
+                        else
+                        {
+                          setState(() {
+                            textField += buttonList[index];
+                          });
+                        }
+
                       },
                       text: buttonList[index],
                       color: isOperator(buttonList[index]) ? Colors.blue : Colors.black26,
                       fontColor: Colors.white,
-                      height: 50,
-                      width: 50,
                     );
                   }
                 },
@@ -162,6 +179,32 @@ class _MyHomePageState extends State<MyHomePage> {
       )
     );
 
+
+  }
+
+  void evaluate()
+  {
+    try {
+      Parser parser = Parser();
+      if (textField.isEmpty)
+      {
+        return;
+      }
+      else
+      {
+        textField = textField.replaceAll('x', '*');
+        Expression expression = parser.parse(textField);
+        ContextModel model = ContextModel();
+        double calculation = expression.evaluate(EvaluationType.REAL, model);
+
+        textField = calculation.toString();
+        complete = true;
+      }
+    }
+    catch (e) {
+      textField = "Error";
+      complete = true;
+    }
 
   }
 
