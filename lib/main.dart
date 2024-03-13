@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
-                  padding: EdgeInsets.only(right: 20, bottom: 10),
+                  padding: EdgeInsets.only(right: 20, bottom: 10, left:20),
                   child: Text(
                     textField,
                     style: TextStyle(fontSize: 50, color: Colors.white),
@@ -105,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onTapped: ()
                       {
                         setState(() {
+                          complete = false;
                           textField = '';
                         });
                       },
@@ -118,7 +119,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       onTapped: ()
                       {
                         setState(() {
-                          textField = textField.substring(0, textField.length - 1);
+                          if (complete)
+                          {
+                            textField = '';
+                            complete = false;
+                          }
+                          else
+                          {
+                            textField = textField.substring(0, textField.length - 1);
+                          }
+
                         });
                       },
                       text: buttonList[index],
