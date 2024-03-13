@@ -57,6 +57,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  var textField = '';
+  var textCalc = '';
 
   final List<String> buttonList =
       [
@@ -72,44 +74,91 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       body: Column(
-          children: [
-            Expanded(
-              flex: 25,
-              child: Container(
-                color: Colors.black,
-              )
-            ),
-            Expanded(
-              flex: 50,
-              child: Container(
-                color: Colors.black87,
-                child: GridView.builder(
-                  itemCount: buttonList.length,
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100),
-                  itemBuilder: (BuildContext context, int index){
-                    if (index == 2 || index == 18){
-                      return Button(
-                          text: buttonList[index],
-                          color: Colors.transparent,
-                          fontColor: Colors.white,
-                          height: 50,
-                          width: 50,
-                      );
-                    }
-                    else {
-                      return Button(
-                        text: buttonList[index],
-                        color: isOperator(buttonList[index]) ? Colors.blue : Colors.black26,
-                        fontColor: Colors.white,
-                        height: 50,
-                        width: 50,
-                      );
-                    }
-                  },
-                )
+        children: [
+          Expanded(
+            flex: 25,
+            child: Container(
+              color: Colors.black87,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  padding: EdgeInsets.only(right: 20, bottom: 10),
+                  child: Text(
+                    textField,
+                    style: TextStyle(fontSize: 50, color: Colors.white),
+                  ),
+                ),
+              ),
+            )
+          ),
+          Expanded(
+            flex: 50,
+            child: Container(
+              color: Colors.black87,
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: buttonList.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+                itemBuilder: (BuildContext context, int index){
+                  if (index == 0) {
+                    return Button(
+                      onTapped: ()
+                      {
+                        setState(() {
+                          textField = '';
+                        });
+                      },
+                      text: buttonList[index],
+                      color: Colors.black26,
+                      fontColor: Colors.white,
+                      height: 50,
+                      width: 50,
+                    );
+                  }
+                  if (index == 1) {
+                    return Button(
+                      onTapped: ()
+                      {
+                        setState(() {
+                          textField = textField.substring(0, textField.length - 1);
+                        });
+                      },
+                      text: buttonList[index],
+                      color: Colors.black26,
+                      fontColor: Colors.white,
+                      height: 50,
+                      width: 50,
+                    );
+                  }
+                  if (index == 2 || index == 18) {
+                    return Button(
+                      text: buttonList[index],
+                      color: Colors.transparent,
+                      fontColor: Colors.white,
+                      height: 50,
+                      width: 50,
+                    );
+                  }
+                  else {
+                    return Button(
+                      onTapped: ()
+                      {
+                        setState(() {
+                          textField += buttonList[index];
+                        });
+                      },
+                      text: buttonList[index],
+                      color: isOperator(buttonList[index]) ? Colors.blue : Colors.black26,
+                      fontColor: Colors.white,
+                      height: 50,
+                      width: 50,
+                    );
+                  }
+                },
               )
             )
-          ],
+          )
+        ],
       )
     );
 
